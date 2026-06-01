@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
+
+        :root {
+            --neon-green: #00ff41;
+            --alert-red: #ff003c;
+            --bg-deep: #020202;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-green);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 2px 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .hacker-border { border: 1px solid rgba(0, 255, 65, 0.3); }
+        .hacker-bg { background: rgba(0, 255, 65, 0.03); }
+        
+        /* CRT Flicker */
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            5% { opacity: 0.95; }
+            10% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        .crt-flicker { animation: flicker 0.15s infinite; }
+
+        .terminal-header {
+            background: rgba(0, 255, 65, 0.15);
+            padding: 4px 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .bar-anim {
+            height: 100%;
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-green); }
+    </style>
+</head>
+<body class="p-2 flex flex-col">
+    <div class="scanlines"></div>
+
+    <header class="flex justify-between items-center hacker-border p-2 mb-2 hacker-bg">
+        <div class="flex items-center gap-4">
+            <span class="bg-green-600 text-black px-2 font-black">CORE</span>
+            <span class="text-xs uppercase tracking-[0.5em]">System-X-Override</span>
+        </div>
+        <div class="text-xs font-mono">
+            Uptime: <span id="uptime">00:00:00</span> | Latency: 12ms | <span class="text-red-500 animate-pulse font-bold">LIVE CONNECTION</span>
+        </div>
+    </header>
+
+    <main class="flex-1 grid grid-cols-12 gap-2 h-full">
+        
+        <div class="col-span-3 flex flex-col gap-2">
+            <div class="flex-1 hacker-border hacker-bg overflow-hidden flex flex-col">
+                <div class="terminal-header">Packet Sniffer [ETH0]</div>
+                <div id="packet-sniffer" class="p-2 text-[10px] space-y-1 overflow-y-auto font-mono opacity-80">
+                    </div>
+            </div>
+            <div class="h-1/3 hacker-border hacker-bg flex flex-col">
+                <div class="terminal-header">Network Topology</div>
+                <div class="flex-1 p-2 flex items-center justify-center">
+                    <div class="w-full h-full border border-green-900 rounded-full animate-ping opacity-20"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-6 flex flex-col gap-2">
+            <div class="flex-1 hacker-border hacker-bg flex flex-col relative">
+                <div class="terminal-header flex justify-between">
+                    <span>Root@Main_Terminal: ~/Bypass/Core</span>
+                    <span class="text-red-500">SECURE SHELL</span>
+                </div>
+                <div id="main-terminal" class="p-4 text-sm font-mono overflow-y-auto flex-1 leading-relaxed">
+                    </div>
+                <div class="absolute bottom-4 right-4 text-[10px] text-green-900 font-black">ACCESS LEVEL: OMNI</div>
+            </div>
+            
+            <div class="h-24 hacker-border hacker-bg flex p-2 gap-4">
+                <div class="flex-1 flex flex-col justify-center">
+                    <span class="text-[9px] mb-1">CPU LOAD: 94%</span>
+                    <div class="h-1 bg-green-950 w-full"><div class="bar-anim w-3/4"></div></div>
+                    <span class="text-[9px] mt-2">RAM USAGE: 12.4GB / 32GB</span>
+                    <div class="h-1 bg-green-950 w-full"><div class="bar-anim w-1/2"></div></div>
+                </div>
+                <button onclick="executeFinalBypass()" class="h-full px-6 bg-green-600 text-black font-black hover:bg-white transition-all active:scale-95">
+                    EXECUTE BYPASS
+                </button>
+            </div>
+        </div>
+
+        <div class="col-span-3 flex flex-col gap-2">
+            <div class="h-1/2 hacker-border hacker-bg border-red-900 bg-red-950/5">
+                <div class="terminal-header !bg-red-900/50 !text-white">Active Alerts</div>
+                <div class="p-2 space-y-2">
+                    <div class="text-[10px] border-l-2 border-red-600 pl-2 py-1 bg-red-900/10 animate-pulse">
+                        [CRITICAL] UNAUTHORIZED IP DETECTED
+                    </div>
+                    <div class="text-[10px] border-l-2 border-yellow-600 pl-2 py-1 bg-yellow-900/10">
+                        [WARNING] ENCRYPTION SHIELD WEAKENING
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 hacker-border hacker-bg overflow-hidden flex flex-col">
+                <div class="terminal-header">Decryption Matrix</div>
+                <div id="matrix-rain" class="flex-1 text-[8px] p-1 break-all opacity-40 overflow-hidden">
+                    </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-2 text-[9px] flex justify-between opacity-50">
+        <span>ST-77981-OVERRIDE-ACTIVE</span>
+        <span>Mogadishu // Banadir // Somalia // 2026</span>
+    </footer>
+
+    <script src="java.js"></script>
+</body>
+</html>
