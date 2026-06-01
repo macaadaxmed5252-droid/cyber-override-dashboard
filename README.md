@@ -36,4 +36,4 @@ JavaScript-ku kaliya maaha koodh caawiye ah, waa mishiinka rasmiga ah ee maamula
 
 1. **Soo degso (Clone) mashruucan:**
 ```bash
-   git clone [https://github.com/YOUR-USERNAME/cyber-override-dashboard.git](https://github.com/YOUR-USERNAME/cyber-override-dashboard.git)
+git clone [https://github.com/macaadaxmed5252-droid/3d-perspective-card.git](https://github.com/macaadaxmed5252-droid/3d-perspective-card.git)
